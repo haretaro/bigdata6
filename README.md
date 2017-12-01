@@ -9,6 +9,9 @@
 from reader import reader
 r = reader()
 next(r) #記事一つ分取り出す
-[next(r) for _ in range(3)] # 3個取り出す
+d = [next(r) for _ in range(3)] # 3個取り出す
 list(r) #全部取り出す.重い
+
+import pandas as pd
+df = pd.DataFrame(d) #pandasのデータフレームにする
 ```
