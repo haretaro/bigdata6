@@ -1,3 +1,4 @@
+#coding: utf-8
 import re
 import json
 
@@ -62,6 +63,7 @@ def parse(filename):
             except Exception as e:
                 raise Exception(e, filename, i, row)
 
+#記事の情報を一個ずつ返すジェネレータ
 def reader():
     for n in range(2008, 2016):
         r = parse('{}.txt'.format(n))
@@ -70,5 +72,5 @@ def reader():
 
 if __name__ == '__main__':
     data = list(reader())
-    with open('output.json', 'w') as f:
+    with open('fat.json', 'w') as f:
         json.dump(data, f, ensure_ascii=False, indent=4, sort_keys=True)
