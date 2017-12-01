@@ -1,6 +1,8 @@
 #coding: utf-8
 import re
 import json
+import pickle
+import os
 
 def parse(filename):
     with open(filename, newline='\n') as f:
@@ -40,6 +42,7 @@ def parse(filename):
 
                 elif row.startswith('PAGEURL'):
                     d[re.search('PAGEURL[0-9]+', row).group()] = re.search('http:.+$', row).group()
+
                 elif row.startswith('PAGE'):
                     key = re.search('PAGE[0-9]+', row).group()
                     line = row[len(key)+1:]
@@ -65,12 +68,23 @@ def parse(filename):
 
 #記事の情報を一個ずつ返すジェネレータ
 def reader():
+    if os.path.exists('cache.bin'):
+        with open('cache.bin', 'rb') as f:
+            data = pickle.load(f)
+        for j in data:
+            yield j
+        raise StopIteration()
+
+    data = []
     for n in range(2008, 2016):
         r = parse('{}.txt'.format(n))
         for j in r:
+            data.append(j)
             yield j
+    if not os.path.exists('cache.bin'):
+        with open('cache.bin', 'wb') as fo:
+            pickle.dump(data, fo)
 
 if __name__ == '__main__':
     data = list(reader())
-    with open('fat.json', 'w') as f:
-        json.dump(data, f, ensure_ascii=False, indent=4, sort_keys=True)
+    print(data[0])
