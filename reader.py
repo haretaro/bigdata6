@@ -1,8 +1,8 @@
 #coding: utf-8
 import re
 import json
-import pickle
 import os
+import pickle
 
 def normalize(writer_name):
     w = writer_name
