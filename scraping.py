@@ -1,3 +1,4 @@
+#coding: utf-8
 from bs4 import BeautifulSoup
 import os
 import pickle
@@ -7,6 +8,7 @@ from urllib.parse import urljoin
 
 page_images = re.compile(r'http://portal.nifty.com/20[0-9]{2}/[0-9]{2}/[0-9]{2}/.+')
 
+#記事一個分のjsonを受け取って画像リストと画像の数を付けて返す
 def extract_images(json):
     page_num = json['pagenum']
     if page_num is None:
@@ -27,6 +29,7 @@ def extract_images(json):
     json['imgnum'] = len(imgs)
     return json
 
+#画像付きのjsonを返すジェネレータ
 def with_images(reader, cache='scraped.bin', verbose=False):
     if os.path.exists(cache):
         with open(cache, 'rb') as f:
@@ -45,12 +48,6 @@ def with_images(reader, cache='scraped.bin', verbose=False):
     if not os.path.exists(cache):
         with open(cache, 'wb') as fo:
             pickle.dump(data, fo)
-
-def show(r):
-    j = scrape(next(r))
-    print('page num', j['pagenum'])
-    for src in j['imgs']:
-        print(src)
 
 if __name__ == '__main__':
     r = with_images(reader(), verbose=True)
