@@ -4,6 +4,18 @@ import json
 import pickle
 import os
 
+def normalize(writer_name):
+    w = writer_name
+    w = re.sub('\s|\(|\)|（|）', '', w)
+    w = re.sub('\/|／|・|＋|、', '', w)
+    w = w.replace('Ｔ','T')
+    w = w.replace('齋藤','斎藤')
+    w = w.replace('Ustream','USTREAM')
+    w = w.replace('miooon', 'minoon')
+    w = re.sub('^デイリーポータルＺ編集部$', '編集部', w)
+    w = w.replace('デイリーポータルZ編集部', '')
+    return w
+
 def parse(filename):
     with open(filename, newline='\n') as f:
         for i, row in enumerate(f.readlines()):
@@ -19,7 +31,7 @@ def parse(filename):
                     d['title'] = row[6:-1]
 
                 elif row.startswith('WRITER'):
-                    d['writer'] = row[7:-1]
+                    d['writer'] = normalize(row[7:-1])
 
                 elif row.startswith('BASEURL'):
                     d['baseurl'] = row[8:-1]
